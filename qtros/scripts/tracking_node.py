@@ -17,16 +17,17 @@ if __name__ == "__main__":
     count = 0;
 
     while(not rospy.is_shutdown()):
-        x = random.uniform(0, 100) / 100.0
-        y = random.uniform(0, 100) / 100.0
+        if rospy.get_param('codevqtros/tracking/enabled'):
+            x = random.uniform(0, 100) / 100.0
+            y = random.uniform(0, 100) / 100.0
 
-        msg = TrackingObject()
-        msg.x = x
-        msg.y = y
-        msg.width = 0.1
-        msg.height = 0.3
-        msg.status = 1
-        count = count + 1
-        tracking_object_pub.publish(msg)
+            msg = TrackingObject()
+            msg.x = x
+            msg.y = y
+            msg.width = 0.1
+            msg.height = 0.3
+            msg.status = 1
+            count = count + 1
+            tracking_object_pub.publish(msg)
 
         rate.sleep()

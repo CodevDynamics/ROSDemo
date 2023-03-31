@@ -32,21 +32,27 @@ int main(int argc, char **argv)
 
     // 主循环
     while(ros::ok()){
-        // 生成x,y两个0～100以内的随机数
-        int x,y;
-        srand((unsigned)time(NULL));
-        x = rand() % 100;
-        srand(x);
-        y = rand() % 100;
+        // 获得开启还是关闭参数
+        bool enabled_;
+		nh.getParam("codevqtros/tracking/enabled", enabled_);
+        // 如果开启则运行
+        if(enabled_) {
+            // 生成x,y两个0～100以内的随机数
+            int x,y;
+            srand((unsigned)time(NULL));
+            x = rand() % 100;
+            srand(x);
+            y = rand() % 100;
 
-        // 模拟发出识别推算的目标
-        codevqtros_msgs::TrackingObject msg;
-        msg.x = x / 100.0f;
-        msg.y = y / 100.0f;
-        msg.width = 0.1f;
-        msg.height = 0.3f;
-        msg.status = 1;
-        tracking_object_pub.publish(msg);
+            // 模拟发出识别推算的目标
+            codevqtros_msgs::TrackingObject msg;
+            msg.x = x / 100.0f;
+            msg.y = y / 100.0f;
+            msg.width = 0.1f;
+            msg.height = 0.3f;
+            msg.status = 1;
+            tracking_object_pub.publish(msg);
+        }
 
         ros::spinOnce();
         rate.sleep();

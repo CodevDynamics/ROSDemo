@@ -35,33 +35,39 @@ int main(int argc, char **argv)
 
     // 主循环
     while(ros::ok()){
-        // 生成x,y两个0～100以内的随机数
-        int x,y;
-        srand(count);
-        x = rand() % 100;
-        srand(x);
-        y = rand() % 100;
+        // 获得开启还是关闭参数
+        bool enabled_;
+		nh.getParam("codevqtros/detect/enabled", enabled_);
+        // 如果开启则运行
+        if(enabled_) {
+            // 生成x,y两个0～100以内的随机数
+            int x,y;
+            srand(count);
+            x = rand() % 100;
+            srand(x);
+            y = rand() % 100;
 
-        // 模拟发出识别推算的目标
-        codevqtros_msgs::DetectObject msg;
-        // count 大于20，模拟一帧推算结束，清除过期数据
-        // 发送 x=y=width=height=0 即可清除
-        if(count++ >= 20) {
-            count = 0;
-            msg.x = 0;
-            msg.y = 0;
-            msg.width = 0;
-            msg.height = 0;
-        } else {
-            msg.x = x / 100.0f;
-            msg.y = y / 100.0f;
-            msg.width = 0.1f;
-            msg.height = 0.3f;
+            // 模拟发出识别推算的目标
+            codevqtros_msgs::DetectObject msg;
+            // count 大于20，模拟一帧推算结束，清除过期数据
+            // 发送 x=y=width=height=0 即可清除
+            if(count++ >= 20) {
+                count = 0;
+                msg.x = 0;
+                msg.y = 0;
+                msg.width = 0;
+                msg.height = 0;
+            } else {
+                msg.x = x / 100.0f;
+                msg.y = y / 100.0f;
+                msg.width = 0.1f;
+                msg.height = 0.3f;
+            }
+            msg.objectId = "Apple";
+            // 颜色顺序 #[Alpha][Red][Green][Blue]
+            msg.rgba = "#1100ff00";
+            detect_object_pub.publish(msg);
         }
-        msg.objectId = "Apple";
-        // 颜色顺序 #[Alpha][Red][Green][Blue]
-        msg.rgba = "#1100ff00";
-        detect_object_pub.publish(msg);
 
         ros::spinOnce();
         rate.sleep();

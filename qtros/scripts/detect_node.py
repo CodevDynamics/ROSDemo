@@ -17,24 +17,25 @@ if __name__ == "__main__":
     count = 0;
 
     while(not rospy.is_shutdown()):
-        x = random.uniform(0, 100) / 100.0
-        y = random.uniform(0, 100) / 100.0
+        if rospy.get_param('codevqtros/detect/enabled'):
+            x = random.uniform(0, 100) / 100.0
+            y = random.uniform(0, 100) / 100.0
 
-        msg = DetectObject()
-        if count >= 20:
-            count = 0;
-            msg.x = 0;
-            msg.y = 0;
-            msg.width = 0;
-            msg.height = 0;
-        else:
-            msg.x = x
-            msg.y = y
-            msg.width = 0.1
-            msg.height = 0.3
-        msg.objectId = "Apple";
-        msg.rgba = "#ff00ff00";
-        count = count + 1
-        detect_object_pub.publish(msg)
+            msg = DetectObject()
+            if count >= 20:
+                count = 0;
+                msg.x = 0;
+                msg.y = 0;
+                msg.width = 0;
+                msg.height = 0;
+            else:
+                msg.x = x
+                msg.y = y
+                msg.width = 0.1
+                msg.height = 0.3
+            msg.objectId = "Apple";
+            msg.rgba = "#ff00ff00";
+            count = count + 1
+            detect_object_pub.publish(msg)
 
         rate.sleep()
